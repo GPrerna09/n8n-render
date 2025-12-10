@@ -1,17 +1,20 @@
+# Base image
 FROM n8nio/n8n:latest
 
-ENV N8N_HOST=0.0.0.0
-ENV N8N_PORT=5678
-ENV N8N_PROTOCOL=https
+# Set the default user
+USER root
 
-# Basic auth (change the password later)
-ENV N8N_BASIC_AUTH_ACTIVE=true
-ENV N8N_BASIC_AUTH_USER=admin
-ENV N8N_BASIC_AUTH_PASSWORD=password123
+# Create n8n directory
+RUN mkdir -p /home/node/.n8n && chown -R node:node /home/node/.n8n
 
-# Webhook URL (you will update it after Render deploys)
-ENV WEBHOOK_URL=""
+# Required for Render free tier (runs N8N in main mode)
+ENV EXECUTIONS_PROCESS=main
 
+# Expose n8n port
 EXPOSE 5678
 
+# Switch back to node user
+USER node
+
+# Start n8n
 CMD ["n8n"]
